@@ -18,8 +18,20 @@ public class HelloWorld {
  public static void main(String[] args) {
   Javalin app = Javalin.create().start(7000);
   app.get("/", ctx -> ctx.result("Hello World"));
+  app.before("/*", ctx -> {
+   ctx.attribute("jpa", "JPA");
+   System.out.println("Rodou antes de tudo");
+  });
+  app.after("/*", ctx -> {
+   Object jpa = ctx.attribute("jpa");
+   System.out.println("" + jpa);
+   System.out.println("Rodou depois de tudo");
+  });
   app.before("/hello/*", ctx -> {
-   System.out.println("Rodou antes");
+   System.out.println("Rodou antes de hello");
+  });
+  app.after("/hello/*", ctx -> {
+   System.out.println("Rodou depois de hello");
   });
   app.get("/hello/:nome", ctx -> {
    ObjectMapper mapper = new ObjectMapper();
